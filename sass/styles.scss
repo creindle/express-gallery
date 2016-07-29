@@ -9,15 +9,17 @@ body {
   border-style: double;
 }
 
-div{
-  //display: flex;
-  align: center;
-  height: 100%;
-  background-color: $div;
-  border-style: solid;
-}
+// div{
+//   //display: flex;
+//   align: center;
+//   height: 100%;
+//   background-color: $div;
+//   border-style: solid;
+// }
+
 #top-of-gallery{
   display: flex;
+
   #header{
   flex: 1 1 75%;
   border-top-style: dashed;
@@ -29,6 +31,33 @@ div{
     background-color: white;
   }
 }
+
+.pictures{
+  display:flex;
+  flex-direction: row;
+  align-items: baseline;
+
+
+  .picture{
+    //margin:auto;
+    flex: 1 1 33%;
+    max-width: 300px;
+    max-height: 300px;
+    padding: 15px;
+    margin: 5px 5px 5px 5px;
+
+    img{
+      height: auto;
+      width: 300px;
+      display:block;
+      align: middle;
+    }
+    span{
+      display:block;
+    }
+  }
+}
+
 #url {
   border-style: solid;
   border-left-color: #00FFFF;
@@ -61,9 +90,9 @@ div{
   align: left;
 }
 
-#picture{
-  display: flex;
-  div{
+// #picture{
+//   display: flex;
+//   div{
 
-  }
-}
+//   }
+// }

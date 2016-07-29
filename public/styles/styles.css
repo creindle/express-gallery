@@ -4,12 +4,6 @@ body {
 #border {
   border-style: double; }
 
-div {
-  align: center;
-  height: 100%;
-  background-color: #ff0000;
-  border-style: solid; }
-
 #top-of-gallery {
   display: flex; }
   #top-of-gallery #header {
@@ -20,6 +14,24 @@ div {
     border-top-style: dashed;
     flex: 1 1 25%;
     background-color: white; }
+
+.pictures {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline; }
+  .pictures .picture {
+    flex: 1 1 33%;
+    max-width: 300px;
+    max-height: 300px;
+    padding: 15px;
+    margin: 5px 5px 5px 5px; }
+    .pictures .picture img {
+      height: auto;
+      width: 300px;
+      display: block;
+      align: middle; }
+    .pictures .picture span {
+      display: block; }
 
 #url {
   border-style: solid;
@@ -50,6 +62,3 @@ div {
 #galleryPhoto:hover {
   border-style: double;
   align: left; }
-
-#picture {
-  display: flex; }

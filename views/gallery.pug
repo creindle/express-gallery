@@ -5,16 +5,15 @@ html(lang="en")
     title Express Gallery
     link(rel="stylesheet" type="text/css" href="/styles/styles.css")
   body
-    div(id="top-of-gallery")
-      div(id="header")
+    #top-of-gallery
+      #header
         h1 _ARCHITEKT
-      div(id="about")
+      #about
         p Welcome to our online profile, we are small group of passionate designers and architects, looking to change and create amazing digital images to inspire others to follow in our innovate steps. Free Architect WordPress Theme
-    each val in picture
-      div(id="picture")
-        div
+
+    .pictures
+      each val in picture
+        .picture
           img(src=val.url)
-        div
-          span val.author
-        div
-          span val.description
+          span #{val.author}
+          span #{val.description}
