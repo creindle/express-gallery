@@ -10,7 +10,6 @@
 console.log("Sanity check");
 // Include json file
 
-
 // Module - Express
 var express = require('express');
 var app = express();
@@ -35,12 +34,17 @@ var querystring = require('querystring');
 var methodOverride = require('method-override');
 var connect = require('connect');
 
+// Module - passport
+var passport = require('passport');
+var BasicStrategy = require('passport-http').BasicStrategy;  // Want to use Basic Authentication Strategy
+
 // Other variables
 var path = require('path');
 //var Gallery = require('./gallery');
 
 // Express
 app.use(express.static('public'));
+
 
 // Pug
 app.set('views', path.resolve(__dirname, 'views'));
@@ -52,12 +56,25 @@ app.use(morgan('dev'));
 // body-parser
 app.use(bodyParser.urlencoded({extended: false}));
 
+// Middleware - Passport/Basic Strategy
+var user = { username: 'bob', password: 'secret', email: 'bob@example.com' };
+passport.use(new BasicStrategy(
+  function(username, password, done) {
+    // Example authentication strategy using
+    if ( !(username === user.username && password === user.password) ) {
+      return done(null, false);
+    }
+    return done(null, user);
+}));
+
 // Method-override
 app.use(methodOverride('_method'));
 
-app.get('/', function (req, res) {
-  res.redirect('/gallery');
-});
+app.get('/',
+  passport.authenticate('basic', { session: false }),
+  function(req, res) {
+    res.redirect('/gallery');
+  });
 
 app.get('/gallery/new', function (req, res) {
   res.render('gallery-new');
