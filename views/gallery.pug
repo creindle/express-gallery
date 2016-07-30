@@ -5,15 +5,17 @@ html(lang="en")
     title Express Gallery
     link(rel="stylesheet" type="text/css" href="/styles/styles.css")
   body
-    #top-of-gallery
-      #header
-        h1 _ARCHITEKT
-      #about
-        p Welcome to our online profile, we are small group of passionate designers and architects, looking to change and create amazing digital images to inspire others to follow in our innovate steps. Free Architect WordPress Theme
+    .page-wrap
+      hr(class="dash")
+      #top-of-gallery
+        #header
+          h1 _ARCHITEKT
+        #about
+          p(class="para") Welcome to our online profile, we are small group of passionate designers and architects, looking to change and create amazing digital images to inspire others to follow in our innovate steps. Free Architect WordPress Theme
 
-    .pictures
-      each val in picture
-        .picture
-          img(src=val.url)
-          span #{val.author}
-          span #{val.description}
+      .pictures
+        each val in picture
+          .picture
+            img(src=val.url)
+            span #{val.author}
+            span #{val.description}
