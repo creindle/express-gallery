@@ -70,11 +70,9 @@ passport.use(new BasicStrategy(
 // Method-override
 app.use(methodOverride('_method'));
 
-app.get('/',
-  passport.authenticate('basic', { session: false }),
-  function(req, res) {
-    res.redirect('/gallery');
-  });
+app.get('/', function(req, res) {
+  res.redirect('/gallery');
+});
 
 app.get('/gallery/new', function (req, res) {
   res.render('gallery-new');
@@ -87,24 +85,26 @@ app.get('/gallery', function (req, res) {
     });
 });
 
-app.get('/gallery/:id', function (req, res) {
-  if (isNaN(req.params.id) === true) {
-    return res.redirect('/gallery');
-  }
-  Picture.findOne({
-    where: {
-      id: req.params.id
-    }
-  })
-  .then(function(picture) {
-    console.log(picture);//if picture === null
-    if (picture === null) {
+app.get('/gallery/:id',
+  passport.authenticate('basic', { session: false }),
+  function(req,res)  {
+    if (isNaN(req.params.id) === true) {
       return res.redirect('/gallery');
     }
-    else {
-      res.render('gallery-id', {picture: picture});
-    }
-  });
+    Picture.findOne({
+      where: {
+        id: req.params.id
+      }
+    })
+    .then(function(picture) {
+      console.log(picture);//if picture === null
+      if (picture === null) {
+        return res.redirect('/gallery');
+      }
+      else {
+        res.render('gallery-id', {picture: picture});
+      }
+    });
 });
 
 app.post('/gallery', function (req, res, next) {
