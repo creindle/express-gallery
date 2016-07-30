@@ -45,7 +45,6 @@ var path = require('path');
 // Express
 app.use(express.static('public'));
 
-
 // Pug
 app.set('views', path.resolve(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -74,9 +73,12 @@ app.get('/', function(req, res) {
   res.redirect('/gallery');
 });
 
-app.get('/gallery/new', function (req, res) {
-  res.render('gallery-new');
-});
+app.get('/gallery/new',
+  passport.authenticate('basic', { session: false }),
+  function (req, res) {
+    console.log(req.user);
+    res.render('gallery-new');
+  });
 
 app.get('/gallery', function (req, res) {
   Picture.findAll()
@@ -106,6 +108,8 @@ app.get('/gallery/:id',
       }
     });
 });
+
+app.use(passport.authenticate('basic', {session:false}));
 
 app.post('/gallery', function (req, res, next) {
   Picture.create({
