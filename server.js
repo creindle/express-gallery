@@ -13,11 +13,12 @@ var LocalStrategy = require('passport-local').Strategy;
 var path = require('path');
 var pug = require('pug');
 var querystring = require('querystring');
+var session = require('express-session');
 
 var db = require('./models');
 var Picture = db.Picture;
 var User = db.User;
-var user = { username: 'bob', password: 'secret' };
+//var user = { username: 'bob', password: 'secret' };
 
 app.set('views', path.resolve(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -26,16 +27,15 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static('public'));
 app.use(methodOverride('_method'));
 app.use(morgan('dev'));
+
+app.use(session({
+  secret: "hahahah",
+  resave: true,
+  saveUninitilized: false
+}));
+
 app.use(passport.initialize());
 app.use(passport.session());
-
-passport.serializeUser(function(user, done) {
-  done(null, user);
-});
-
-passport.deserializeUser(function(user, done) {
-  done(null, user);
-});
 
 passport.use(new LocalStrategy(
   function(username, password, done) {
@@ -57,6 +57,21 @@ passport.use(new LocalStrategy(
     })
   }
 ));
+
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(userId, done) {
+  User.findOne({
+    where: {
+      id: userId
+    }
+  })
+  .then(function(user) {
+    done(null, user);
+  })
+});
 
 // Get Methods
 app.get('/', function(req, res) {
@@ -99,7 +114,10 @@ app.get('/login', function(req, res) {
 });
 
 app.get('/secret', function(req, res) {
-  res.render('secret', {user: user});
+  console.log("Render the secret");
+  console.log(req.user.username);
+  console.log("WHERE IS THE SECRET");
+  res.render('secret', {username: req.user.username});
 });
 
 // - Post Methods
