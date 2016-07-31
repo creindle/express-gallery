@@ -1,84 +1,60 @@
-/*
-​*GET /*​: `Returning a list of gallery photos`
-​*GET /gallery/4*​: `Single gallery 4`
-​*GET /gallery/new*​: `Gallery submission form`
-​*POST /gallery*​: `Creating a gallery with {author}, {url}, {description}`
-​*PUT /gallery/4*​: `Updating gallery with {new_author}, {new_url}, {new_description}`
-​*DELETE /gallery/4*​: `Deleting gallery 4`
-*/
-
 console.log("Sanity check");
-// Include json file
 
-// Module - Express
 var express = require('express');
+var session = require('express-session');
 var app = express();
+
+var bodyParser = require('body-parser');
+var connect = require('connect');
+var methodOverride = require('method-override');
+var morgan = require('morgan');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var path = require('path');
+var pug = require('pug');
+var querystring = require('querystring');
 
 var db = require('./models');
 var Picture = db.Picture;
-//console.log('db: ', db);
+var user = { username: 'bob', password: 'secret' };
 
-// Module - Pug/Jade
-var pug = require('pug');
-
-// Module - morgan
-var morgan = require('morgan');
-
-// Module - body-parser
-var bodyParser = require('body-parser');
-
-// Module - querystring
-var querystring = require('querystring');
-
-// Module - method-override
-var methodOverride = require('method-override');
-var connect = require('connect');
-
-// Module - passport
-var passport = require('passport');
-var BasicStrategy = require('passport-http').BasicStrategy;  // Want to use Basic Authentication Strategy
-
-// Other variables
-var path = require('path');
-//var Gallery = require('./gallery');
-
-// Express
-app.use(express.static('public'));
-
-// Pug
 app.set('views', path.resolve(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-// morgan
-app.use(morgan('dev'));
-
-// body-parser
 app.use(bodyParser.urlencoded({extended: false}));
-
-// Middleware - Passport/Basic Strategy
-var user = { username: 'bob', password: 'secret', email: 'bob@example.com' };
-passport.use(new BasicStrategy(
-  function(username, password, done) {
-    // Example authentication strategy using
-    if ( !(username === user.username && password === user.password) ) {
-      return done(null, false);
-    }
-    return done(null, user);
-}));
-
-// Method-override
+app.use(express.static('public'));
 app.use(methodOverride('_method'));
+app.use(morgan('dev'));
+app.use(passport.initialize());
+app.use(passport.session());
 
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+    if ( !(username === user.username && password === user.password) ) {
+       console.log('Is false');
+       return done(null, false);
+    }
+    console.log('Is = >' + user);
+    return done(null, user);
+  }
+));
+
+// Get Methods
 app.get('/', function(req, res) {
   res.redirect('/gallery');
 });
 
-app.get('/gallery/new',
-  passport.authenticate('basic', { session: false }),
-  function (req, res) {
-    console.log(req.user);
-    res.render('gallery-new');
-  });
+app.get('/gallery/new', function (req, res) {
+  res.render('gallery-new');
+});
 
 app.get('/gallery', function (req, res) {
   Picture.findAll()
@@ -87,29 +63,41 @@ app.get('/gallery', function (req, res) {
     });
 });
 
-app.get('/gallery/:id',
-  passport.authenticate('basic', { session: false }),
-  function(req,res)  {
-    if (isNaN(req.params.id) === true) {
+app.get('/gallery/:id', function(req,res)  {
+  if (isNaN(req.params.id) === true) {
+    return res.redirect('/gallery');
+  }
+  Picture.findOne({
+    where: {
+      id: req.params.id
+    }
+  })
+  .then(function(picture) {
+    console.log(picture);//if picture === null
+    if (picture === null) {
       return res.redirect('/gallery');
     }
-    Picture.findOne({
-      where: {
-        id: req.params.id
-      }
-    })
-    .then(function(picture) {
-      console.log(picture);//if picture === null
-      if (picture === null) {
-        return res.redirect('/gallery');
-      }
-      else {
-        res.render('gallery-id', {picture: picture});
-      }
-    });
+    else {
+      res.render('gallery-id', {picture: picture});
+    }
+  });
 });
 
-app.use(passport.authenticate('basic', {session:false}));
+app.get('/login', function(req, res) {
+  res.render('login');
+});
+
+app.get('/secret', function(req,res) {
+  res.render('secret');
+});
+
+// - Post Methods
+app.post('/login',
+  passport.authenticate('local', {
+    successRedirect: '/secret',
+    failureRedirect: '/login'
+  })
+);
 
 app.post('/gallery', function (req, res, next) {
   Picture.create({
