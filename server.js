@@ -16,6 +16,7 @@ var querystring = require('querystring');
 
 var db = require('./models');
 var Picture = db.Picture;
+var User = db.User;
 var user = { username: 'bob', password: 'secret' };
 
 app.set('views', path.resolve(__dirname, 'views'));
@@ -38,12 +39,22 @@ passport.deserializeUser(function(user, done) {
 
 passport.use(new LocalStrategy(
   function(username, password, done) {
-    if ( !(username === user.username && password === user.password) ) {
-       console.log('Is false');
-       return done(null, false);
-    }
-    console.log('Is = >' + user);
-    return done(null, user);
+    User.findOne({
+      where: {
+        username: "bob"
+      }
+    })
+    .then(function(user){
+      console.log(user);
+      console.log(username);
+      console.log(password);
+      if ( !(username === user.username && password === user.password) ) {
+         console.log('Is false');
+         return done(null, false);
+      }
+      console.log('Is = >' + user);
+      return done(null, user);
+    })
   }
 ));
 
@@ -87,8 +98,8 @@ app.get('/login', function(req, res) {
   res.render('login');
 });
 
-app.get('/secret', function(req,res) {
-  res.render('secret');
+app.get('/secret', function(req, res) {
+  res.render('secret', {user: user});
 });
 
 // - Post Methods
