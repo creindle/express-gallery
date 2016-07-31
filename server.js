@@ -41,7 +41,7 @@ passport.use(new LocalStrategy(
   function(username, password, done) {
     User.findOne({
       where: {
-        username: "bob"
+        username: username
       }
     })
     .then(function(user){
