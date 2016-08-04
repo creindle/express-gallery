@@ -13,7 +13,6 @@ var LocalStrategy = require('passport-local').Strategy;
 var path = require('path');
 var pug = require('pug');
 var querystring = require('querystring');
-var session = require('express-session');
 
 var db = require('./models');
 var Picture = db.Picture;
@@ -78,7 +77,9 @@ app.get('/', function(req, res) {
   res.redirect('/gallery');
 });
 
-app.get('/gallery/new', function (req, res) {
+app.get('/gallery/new',
+  isAuthenticated,
+  function (req, res) {
   res.render('gallery-new');
 });
 
@@ -123,7 +124,7 @@ app.get('/secret', function(req, res) {
 // - Post Methods
 app.post('/login',
   passport.authenticate('local', {
-    successRedirect: '/secret',
+    successRedirect: '/gallery',
     failureRedirect: '/login'
   })
 );
@@ -173,3 +174,10 @@ var server = app.listen(8080, function () {
   console.log(`Example app listening at http://%s:%s`, host, port);
   db.sequelize.sync();
 });
+
+function isAuthenticated (req, res, next) {
+  if (!req.isAuthenticated()) {
+    return res.redirect('/login');
+  }
+  return next();
+}
