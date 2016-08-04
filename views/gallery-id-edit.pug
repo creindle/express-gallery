@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    title Express Gallery
+    link(rel="stylesheet" type="text/css" href="/styles/styles.css")
+  body
+    form(method="POST" action="/gallery/" + picture.id + "?_method=PUT")
+      div(id="border")
+        div(id="url")
+          div
+            label(for="url") URL
+          div(text-align="justify")
+            input(type="url" name="url")
+
+        div(id="author")
+          div
+            label(for="author") Author
+          div
+            input(type="text" name="author")
+
+        div(id="description")
+          div
+            label(for="description") Description
+          div
+            textarea(name="description" value="description")
+
+        div(id="submit")
+          div
+            input(type="submit")

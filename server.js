@@ -27,6 +27,7 @@ app.use(express.static('public'));
 app.use(methodOverride('_method'));
 app.use(morgan('dev'));
 
+
 app.use(session({
   secret: "hahahah",
   resave: true,
@@ -90,6 +91,7 @@ app.get('/gallery', function (req, res) {
     });
 });
 
+
 app.get('/gallery/:id', function(req,res)  {
   if (isNaN(req.params.id) === true) {
     return res.redirect('/gallery');
@@ -106,6 +108,26 @@ app.get('/gallery/:id', function(req,res)  {
     }
     else {
       res.render('gallery-id', {picture: picture});
+    }
+  });
+});
+
+app.get('/gallery/:id/edit', function(req, res) {
+  if (isNaN(req.params.id) === true) {
+    return res.redirect('/gallery');
+  }
+  Picture.findOne({
+    where: {
+      id: req.params.id
+    }
+  })
+  .then(function(picture) {
+    console.log(picture);//if picture === null
+    if (picture === null) {
+      return res.redirect('/gallery');
+    }
+    else {
+      res.render('gallery-id-edit', {picture: picture});
     }
   });
 });
@@ -142,6 +164,7 @@ app.post('/gallery', function (req, res, next) {
 });
 
 app.put('/gallery/:id', function (req, res) {
+  console.log("entering put method");
   Picture.update({
     url: req.body.url,
     author: req.body.author,
@@ -163,17 +186,23 @@ app.delete('/gallery/:id', function (req, res) {
     }
   })
   .then(function(pictures) {
-    res.json(pictures);
+    res.redirect('/gallery');
   });
 });
 
-var server = app.listen(8080, function () {
-  var host = server.address().address;
-  var port = server.address().port;
+db.sequelize
+  .sync()
+  .then(function() {
+    var server = app.listen(8080, function () {
+      var host = server.address().address;
+      var port = server.address().port;
 
-  console.log(`Example app listening at http://%s:%s`, host, port);
-  db.sequelize.sync();
+      console.log(`Example app listening at http://%s:%s`, host, port);
 });
+  })
+  .catch(function (err) {
+    return
+  })
 
 function isAuthenticated (req, res, next) {
   if (!req.isAuthenticated()) {
