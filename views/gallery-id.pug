@@ -5,19 +5,24 @@ html(lang="en")
     title Express Gallery
     link(rel="stylesheet" type="text/css" href="/styles/styles.css")
   body
-    h1 _Express Gallery
-    div
-      h2 Uploaded by: #{picture.author}
-      div
-        img(src=picture.url width="100%" height="100%")
-      div
-        p= picture.description
-        p Copyright: #{picture.url}
-    button(type="submit" onclick='edit()') Edit
-    button(type="submit" onclick='gallery()') Back to Gallery
-    p
-      form(method="POST" action="/gallery/" + picture.id + "?_method=DELETE")
-        button(type="submit") Delete Photo
+    .page-wrap
+      hr(class="dash")
+      #top-of-gallery
+        #header
+          h1 _ARCHITEKT
+        h2 #{picture.author}
+
+      .pictures
+        .picture
+          img(src=picture.url width="100%" height="100%")
+          span #{picture.description}
+          span Copyright: #{picture.url}
+
+      button(type="submit" onclick='edit()') Edit
+      button(type="submit" onclick='gallery()') Back to Gallery
+      p
+        form(method="POST" action="/gallery/" + picture.id + "?_method=DELETE")
+          button(type="submit") Delete Photo
 
     script.
       function edit(){

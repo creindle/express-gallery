@@ -30,7 +30,9 @@ app.use(morgan('dev'));
 
 app.use(session({
   secret: "hahahah",
-  resave: true,
+  store: new RedisStore(),
+  resave: false,
+  ttl: 60,
   saveUninitilized: false
 }));
 
@@ -171,7 +173,6 @@ app.post('/gallery', function (req, res, next) {
 });
 
 app.put('/gallery/:id', function (req, res) {
-  console.log("entering put method");
   Picture.update({
     url: req.body.url,
     author: req.body.author,
@@ -179,10 +180,13 @@ app.put('/gallery/:id', function (req, res) {
   }, {
     where: {
       id: req.params.id
-    }
+    },
+    returning: true
   })
   .then(function(picture) {
-    res.render('gallery-id', {picture: picture});
+    var thePicture = picture[1];
+    var thePictureValues = thePicture[0].dataValues;
+    res.redirect('/gallery/' + thePictureValues.id);
   });
 });
 
