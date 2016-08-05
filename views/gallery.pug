@@ -16,7 +16,8 @@ html(lang="en")
       .pictures
         each val in picture
           .picture
-            img(src=val.url)
+            a(href="/gallery/" + val.id)
+              img(src=val.url)
             span #{val.author}
             span #{val.description}
 

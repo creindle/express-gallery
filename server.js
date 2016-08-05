@@ -27,7 +27,6 @@ app.use(express.static('public'));
 app.use(methodOverride('_method'));
 app.use(morgan('dev'));
 
-
 app.use(session({
   secret: "hahahah",
   resave: true,
@@ -53,16 +52,19 @@ passport.use(new LocalStrategy(
          return done(null, false);
       }
       console.log('Is = >' + user);
+      //this is when the user is serialized :D
       return done(null, user);
     })
   }
 ));
 
 passport.serializeUser(function(user, done) {
+  console.log("Serialize User", user);
   done(null, user.id);
 });
 
 passport.deserializeUser(function(userId, done) {
+  console.log("Deserialize user", userId);
   User.findOne({
     where: {
       id: userId
@@ -71,6 +73,9 @@ passport.deserializeUser(function(userId, done) {
   .then(function(user) {
     done(null, user);
   })
+  .catch(function(err) {
+    return done(err);
+  });
 });
 
 // Get Methods
@@ -140,6 +145,7 @@ app.get('/secret', function(req, res) {
   console.log("Render the secret");
   console.log(req.user.username);
   console.log("WHERE IS THE SECRET");
+  console.log(req.headers);
   res.render('secret', {username: req.user.username});
 });
 
