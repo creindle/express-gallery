@@ -19,3 +19,10 @@ html(lang="en")
             img(src=val.url)
             span #{val.author}
             span #{val.description}
+
+      button(type="submit" onclick='newPhoto()') Add your photo!:)
+
+  script.
+    function newPhoto(){
+      window.location="/gallery/new"
+    }
