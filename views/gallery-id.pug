@@ -14,11 +14,16 @@ html(lang="en")
         p= picture.description
         p Copyright: #{picture.url}
     button(type="submit" onclick='edit()') Edit
-
-    form(method="POST" action="/gallery/" + picture.id + "?_method=DELETE")
-      button(type="submit") Delete Photo
+    button(type="submit" onclick='gallery()') Back to Gallery
+    p
+      form(method="POST" action="/gallery/" + picture.id + "?_method=DELETE")
+        button(type="submit") Delete Photo
 
     script.
       function edit(){
         window.location="/gallery/#{picture.id}/edit"
+      }
+
+      function gallery(){
+        window.location="/gallery"
       }

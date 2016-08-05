@@ -2,6 +2,7 @@ console.log("Sanity check");
 
 var express = require('express');
 var session = require('express-session');
+var RedisStore = require('connect-redis')(session);
 var app = express();
 
 var bodyParser = require('body-parser');
