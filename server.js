@@ -18,7 +18,6 @@ var querystring = require('querystring');
 var db = require('./models');
 var Picture = db.Picture;
 var User = db.User;
-//var user = { username: 'bob', password: 'secret' };
 
 app.set('views', path.resolve(__dirname, 'views'));
 app.set('view engine', 'pug');

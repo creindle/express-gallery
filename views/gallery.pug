@@ -9,7 +9,10 @@ html(lang="en")
       hr(class="dash")
       #top-of-gallery
         #header
-          h1 _ARCHITEKT
+          li(class="dropdown")
+            h1 _ARCHITEKT
+            div(class="dropdown-content")
+              a(href="/gallery/new") Create Photo
         #about
           p(class="para") Welcome to our online profile, we are small group of passionate designers and architects, looking to change and create amazing digital images to inspire others to follow in our innovate steps. Free Architect WordPress Theme
 
@@ -21,9 +24,3 @@ html(lang="en")
             span #{val.author}
             span #{val.description}
 
-      button(type="submit" onclick='newPhoto()') Add your photo!:)
-
-  script.
-    function newPhoto(){
-      window.location="/gallery/new"
-    }

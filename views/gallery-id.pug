@@ -15,8 +15,10 @@ html(lang="en")
       .pictures
         .picture
           img(src=picture.url width="100%" height="100%")
+          p
           span #{picture.description}
-          span Copyright: #{picture.url}
+          p
+          span Copyright #{picture.url}
 
       button(type="submit" onclick='edit()') Edit
       button(type="submit" onclick='gallery()') Back to Gallery
