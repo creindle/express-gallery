@@ -24,8 +24,5 @@ html(lang="en")
           p
           span #{picture.description}
           p
-          span Copyright #{picture.url}
+          span Copyright #{picture.author}
 
-      p
-        form(method="POST" action="/gallery/" + picture.id + "?_method=DELETE")
-          button(type="submit") Delete Photo
