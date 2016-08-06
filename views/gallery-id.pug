@@ -9,7 +9,12 @@ html(lang="en")
       hr(class="dash")
       #top-of-gallery
         #header
-          h1 _ARCHITEKT
+          li(class="dropdown")
+            h1 _ARCHITEKT
+            div(class="dropdown-content")
+              a(href="/gallery/" + picture.id + "/edit") Edit
+              a(href="/gallery/" + picture.id + "?_method=DELETE") Delete
+              a(href="/gallery") Back to Gallery
         h2 #{picture.author}
 
       .pictures
@@ -20,17 +25,6 @@ html(lang="en")
           p
           span Copyright #{picture.url}
 
-      button(type="submit" onclick='edit()') Edit
-      button(type="submit" onclick='gallery()') Back to Gallery
       p
         form(method="POST" action="/gallery/" + picture.id + "?_method=DELETE")
           button(type="submit") Delete Photo
-
-    script.
-      function edit(){
-        window.location="/gallery/#{picture.id}/edit"
-      }
-
-      function gallery(){
-        window.location="/gallery"
-      }
