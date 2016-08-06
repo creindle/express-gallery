@@ -13,7 +13,8 @@ html(lang="en")
             h1 _ARCHITEKT
             div(class="dropdown-content")
               a(href="/gallery/" + picture.id + "/edit") Edit
-              a(href="/gallery/" + picture.id + "?_method=DELETE") Delete
+              form(id="delete_form" method="POST" action="/gallery/" + picture.id + "?_method=DELETE")
+              a(href="javascript:{}" onclick="document.getElementById('delete_form').submit();") Delete
               a(href="/gallery") Back to Gallery
         h2 #{picture.author}
 
