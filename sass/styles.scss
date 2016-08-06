@@ -131,8 +131,6 @@ h1 a:hover, .dropdown:hover .dropbtn {
     display: block;
 }
 
-
-
 .pictures{
   margin-top: 20px;
   display: flex;
@@ -143,8 +141,8 @@ h1 a:hover, .dropdown:hover .dropbtn {
 
   .picture{
     //flex: 0 0 auto;
-    // width: 500px;
-    // height: 300px;
+    width: 500px;
+    height: 500px;
     padding: 1px;
     // align: middle;
 
@@ -157,12 +155,35 @@ h1 a:hover, .dropdown:hover .dropbtn {
       margin-top: 15px;
       // width: 100%;
     }
+
     span{
       display:block;
+      width: 450px;
       font-family: $arial-font;
       font-size: 20px;
       margin-top: 5px;
+      word-break: break-word;
     }
+  }
+}
+
+.onePicture {
+  margin-top: 20px;
+  padding: 1px;
+
+  img{
+    width: auto;
+    display:block;
+    margin-bottom: 15px;
+    margin-top: 15px;
+  }
+
+  span{
+    display:block;
+    font-family: $arial-font;
+    font-size: 20px;
+    margin-top: 5px;
+    word-break: break-word;
   }
 }
 
