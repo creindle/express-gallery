@@ -163,7 +163,8 @@ app.post('/gallery', function (req, res, next) {
   Picture.create({
     url: req.body.url,
     author: req.body.author,
-    description: req.body.description
+    description: req.body.description,
+    user_id: req.user.dataValues.id
   })
   .then(function(picture) {
     console.log(picture.toJSON());
@@ -175,7 +176,8 @@ app.put('/gallery/:id', function (req, res) {
   Picture.update({
     url: req.body.url,
     author: req.body.author,
-    description: req.body.description
+    description: req.body.description,
+    user_id: req.user.dataValues.id
   }, {
     where: {
       id: req.params.id
