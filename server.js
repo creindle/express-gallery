@@ -46,9 +46,6 @@ passport.use(new LocalStrategy(
       }
     })
     .then(function(user){
-      console.log(user);
-      console.log(username);
-      console.log(password);
       if ( !(username === user.username && password === user.password) ) {
          console.log('Is false');
          return done(null, false);
@@ -61,12 +58,10 @@ passport.use(new LocalStrategy(
 ));
 
 passport.serializeUser(function(user, done) {
-  console.log("Serialize User", user);
   done(null, user.id);
 });
 
 passport.deserializeUser(function(userId, done) {
-  console.log("Deserialize user", userId);
   User.findOne({
     where: {
       id: userId
@@ -82,6 +77,7 @@ passport.deserializeUser(function(userId, done) {
 
 // Get Methods
 app.get('/', function(req, res) {
+
   res.redirect('/gallery');
 });
 
@@ -106,10 +102,15 @@ app.get('/gallery/:id', function(req,res)  {
   Picture.findOne({
     where: {
       id: req.params.id
-    }
+    },
+    include: [{
+      model: User,
+      as: 'user'
+    }]
   })
   .then(function(picture) {
-    console.log(picture);//if picture === null
+    console.log(picture.user);
+    //console.log(picture);//if picture === null
     if (picture === null) {
       return res.redirect('/gallery');
     }
@@ -144,10 +145,6 @@ app.get('/login', function(req, res) {
 });
 
 app.get('/secret', function(req, res) {
-  console.log("Render the secret");
-  console.log(req.user.username);
-  console.log("WHERE IS THE SECRET");
-  console.log(req.headers);
   res.render('secret', {username: req.user.username});
 });
 
@@ -167,7 +164,6 @@ app.post('/gallery', function (req, res, next) {
     user_id: req.user.dataValues.id
   })
   .then(function(picture) {
-    console.log(picture.toJSON());
     res.render('gallery-id', {picture: picture});
   });
 });
@@ -222,3 +218,25 @@ function isAuthenticated (req, res, next) {
   }
   return next();
 }
+
+// function displayPhotos (res) {
+//   Picture.findAll({
+//     order: 'id ASC',
+//     include: [{
+//       model: User,
+//       as: 'user'
+//     }]
+//   })
+//   .then ((photos) => {
+//     if (photos) {
+//     var galleryOfPhotos = [];
+//     photos.forEach (function (element) {
+//       console.log(element.user);
+//       galleryOfPhotos.push(element.dataValues);
+//     });
+//     res.render('gallery', {entries: galleryOfPhotos});
+//   } else {
+//     return next ('There are no pictures in the gallery.');
+//     }
+//   });
+// }
